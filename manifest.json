@@ -2,7 +2,7 @@
   "name": "NSS Attendance Scanner",
   "short_name": "NSS",
   "start_url": ".",
-  "display": "standalone",
+  "display": "minimal-ui",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
   "icons": [
