@@ -1,6 +1,6 @@
 {
   "name": "NSS Attendance Scanner",
-  "short_name": "Scanner",
+  "short_name": "NSS",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
