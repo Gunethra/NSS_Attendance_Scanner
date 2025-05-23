@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NSS Attendance Scanner</title>
+<!--   <script src="https://unpkg.com/html5-qrcode"></script> -->
+  <script src="./html5-qrcode.min.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 1rem; }
+    #reader { width: 100%; max-width: 400px; margin-bottom: 1rem; }
+    button { margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <h1>NSS Attendance Scanner</h1>
+  <div id="reader"></div>
+  <button onclick="startScanner()">Start Scan</button>
+  <button onclick="stopScanner()">Stop Scan</button>
+  <button onclick="downloadCSV()">Download CSV</button>
+  <ul id="scan-list"></ul>
+  <audio id="beep" src="./beep.ogg" preload="auto"></audio>
+
+  <script>
+    let scanner;
+    const scans = [];
+
+    function startScanner() {
+  scanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+  scanner.render((decodedText) => {
+    if (scans.some(s => s.code === decodedText)) return;
+    const time = new Date().toISOString();
+    scans.push({ code: decodedText, time });
+    // const li = document.createElement('li');
+    // li.textContent = `${decodedText} - ${time}`;
+    // document.getElementById('scan-list').appendChild(li);
+    document.getElementById('beep').play();
+    const li = document.createElement('li');
+    li.textContent = `${decodedText} - ${time}`;
+    document.getElementById('scan-list').appendChild(li);
+  }, console.warn);
+}
+
+    function stopScanner() {
+      if (scanner) scanner.clear();
+    }
+
+    function downloadCSV() {
+      const headers = 'Time,Roll No\n';
+      const rows = scans.map(s => `${s.time},${s.code}`).join('\n');
+      const blob = new Blob([headers + rows], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
