@@ -20,7 +20,7 @@
   <!-- Manual Entry -->
   <div style="margin-bottom: 1rem;">
     <input type="text" id="manual-prefix" placeholder="Dept." style="width: 50px; text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" />
-    <select id="yr" style="width: 20px;"></select>
+    <select id="yr" style="width: 40px;"></select>
     <span style="font-weight: normal;">BTECH11</span>
     <input type="text" id="manual-suffix" placeholder="Number" style="width: 50px;" />
     <button onclick="manualEntry()">Add Manual Entry</button>
@@ -38,7 +38,7 @@
 
   <ul id="scan-list"></ul>
   <audio id="beep" src="./beep.ogg" preload="auto"></audio>
-  
+
   <script>
     let scanner;
     const scans = [];
@@ -92,22 +92,23 @@
       a.click();
       URL.revokeObjectURL(url);
     }
-    
+
     function manualEntry() {
-      const prefix = document.getElementById('manual-prefix').value.trim();
+      const prefix = document.getElementById('manual-prefix').value.trim().toUpperCase();
+      const year = document.getElementById('yr').value;
       const suffix = document.getElementById('manual-suffix').value.trim();
-      if (!prefix || !suffix) return;
-    
-      const value = `${prefix}BTECH11${suffix}`;
+      if (!prefix || !year || !suffix) return;
+
+      const value = `${prefix}${year}BTECH11${suffix}`;
       if (scans.some(s => s.code === value)) return;
-    
+
       scans.push({ code: value, time: "manual" });
       saveScans();
       document.getElementById('last-scan').textContent = `Last Scanned: ${value}`;
       const li = document.createElement('li');
       li.textContent = `${value} - manual`;
       document.getElementById('scan-list').appendChild(li);
-    
+
       document.getElementById('manual-prefix').value = '';
       document.getElementById('manual-suffix').value = '';
     }
