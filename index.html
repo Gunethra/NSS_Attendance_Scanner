@@ -20,6 +20,7 @@
   <!-- Manual Entry -->
   <div style="margin-bottom: 1rem;">
     <input type="text" id="manual-prefix" placeholder="Dept." style="width: 50px; text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" />
+    <select id="yr" style="width: 20px;"></select>
     <span style="font-weight: normal;">BTECH11</span>
     <input type="text" id="manual-suffix" placeholder="Number" style="width: 50px;" />
     <button onclick="manualEntry()">Add Manual Entry</button>
@@ -124,6 +125,19 @@
         .then(() => console.log('Service Worker registered'))
         .catch(err => console.error('Service Worker registration failed:', err));
     }
+
+    // Populate year dropdown
+    (function populateYearDropdown() {
+      const select = document.getElementById('manual-year');
+      const currentYear = new Date().getFullYear();
+      const years = Array.from({ length: 6 }, (_, i) => (currentYear - 5 + i).toString().slice(-2));
+      years.forEach(y => {
+        const option = document.createElement('option');
+        option.value = y;
+        option.textContent = y;
+        select.appendChild(option);
+      });
+    })();
 
     // Load saved scans when the page loads
     window.addEventListener('load', loadScans);
