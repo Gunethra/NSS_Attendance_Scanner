@@ -13,22 +13,15 @@
     button { margin: 5px 10px 5px 0; }
   </style>
 </head>
-<!-- <body>
-  <h1>NSS Attendance Scanner</h1>
-  <h3 id="last-scan">Last Scanned: None</h3>
-  <div id="reader"></div>
-  <button onclick="startScanner()">Start Scan</button>
-  <button onclick="stopScanner()">Stop Scan</button>
-  <button onclick="downloadCSV()">Download CSV</button>
-  <button onclick="clearAllScans()">Clear All</button>
-  <ul id="scan-list"></ul>
-  <audio id="beep" src="./beep.ogg" preload="auto"></audio> -->
+
 <body>
   <h1>NSS Attendance Scanner</h1>
 
   <!-- Manual Entry -->
   <div style="margin-bottom: 1rem;">
-    <input type="text" id="manual-input" placeholder="Enter roll number" />
+    <input type="text" id="manual-prefix" placeholder="Prefix" style="width: 80px;" />
+    <span style="font-weight: bold;">BTECH11</span>
+    <input type="text" id="manual-suffix" placeholder="Suffix" style="width: 80px;" />
     <button onclick="manualEntry()">Add Manual Entry</button>
   </div>
 
@@ -100,16 +93,22 @@
     }
     
     function manualEntry() {
-      const input = document.getElementById('manual-input');
-      const value = input.value.trim();
-      if (!value || scans.some(s => s.code === value)) return;
+      const prefix = document.getElementById('manual-prefix').value.trim();
+      const suffix = document.getElementById('manual-suffix').value.trim();
+      if (!prefix || !suffix) return;
+    
+      const value = `${prefix}BTECH11${suffix}`;
+      if (scans.some(s => s.code === value)) return;
+    
       scans.push({ code: value, time: "manual" });
       saveScans();
       document.getElementById('last-scan').textContent = `Last Scanned: ${value}`;
       const li = document.createElement('li');
       li.textContent = `${value} - manual`;
       document.getElementById('scan-list').appendChild(li);
-      input.value = '';
+    
+      document.getElementById('manual-prefix').value = '';
+      document.getElementById('manual-suffix').value = '';
     }
 
     function clearAllScans() {
