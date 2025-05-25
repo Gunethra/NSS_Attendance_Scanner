@@ -128,7 +128,7 @@
 
     // Populate year dropdown
     (function populateYearDropdown() {
-      const select = document.getElementById('manual-year');
+      const select = document.getElementById('yr');
       const currentYear = new Date().getFullYear();
       const years = Array.from({ length: 6 }, (_, i) => (currentYear - 5 + i).toString().slice(-2));
       years.forEach(y => {
