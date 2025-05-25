@@ -13,7 +13,7 @@
     button { margin: 5px 10px 5px 0; }
   </style>
 </head>
-<body>
+<!-- <body>
   <h1>NSS Attendance Scanner</h1>
   <h3 id="last-scan">Last Scanned: None</h3>
   <div id="reader"></div>
@@ -22,8 +22,29 @@
   <button onclick="downloadCSV()">Download CSV</button>
   <button onclick="clearAllScans()">Clear All</button>
   <ul id="scan-list"></ul>
-  <audio id="beep" src="./beep.ogg" preload="auto"></audio>
+  <audio id="beep" src="./beep.ogg" preload="auto"></audio> -->
+<body>
+  <h1>NSS Attendance Scanner</h1>
 
+  <!-- Manual Entry -->
+  <div style="margin-bottom: 1rem;">
+    <input type="text" id="manual-input" placeholder="Enter roll number" />
+    <button onclick="manualEntry()">Add Manual Entry</button>
+  </div>
+
+  <!-- Last Scanned Display -->
+  <h3 id="last-scan">Last Scanned: None</h3>
+
+  <!-- Scanner and Controls -->
+  <div id="reader"></div>
+  <button onclick="startScanner()">Start Scan</button>
+  <button onclick="stopScanner()">Stop Scan</button>
+  <button onclick="downloadCSV()">Download CSV</button>
+  <button onclick="clearAllScans()">Clear All</button>
+
+  <ul id="scan-list"></ul>
+  <audio id="beep" src="./beep.ogg" preload="auto"></audio>
+  
   <script>
     let scanner;
     const scans = [];
@@ -76,6 +97,19 @@
       a.download = `${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
       URL.revokeObjectURL(url);
+    }
+    
+    function manualEntry() {
+      const input = document.getElementById('manual-input');
+      const value = input.value.trim();
+      if (!value || scans.some(s => s.code === value)) return;
+      scans.push({ code: value, time: "manual" });
+      saveScans();
+      document.getElementById('last-scan').textContent = `Last Scanned: ${value}`;
+      const li = document.createElement('li');
+      li.textContent = `${value} - manual`;
+      document.getElementById('scan-list').appendChild(li);
+      input.value = '';
     }
 
     function clearAllScans() {
